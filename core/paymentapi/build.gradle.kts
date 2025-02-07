@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    id("java-library")
+    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 java {
