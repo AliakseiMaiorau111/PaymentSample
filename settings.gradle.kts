@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "PaymentSample"
 include(":app")
- 
+include(":core:common")
+include(":core:data")
+include(":core:paymentapi")
+include(":features:pinpad")
