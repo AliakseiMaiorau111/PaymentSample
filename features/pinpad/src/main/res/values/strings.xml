@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pinpad_purchase">Purchase</string>
+    <string name="pinpad_please_enter_amount">Please enter amount.</string>
+</resources>

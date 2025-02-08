@@ -20,8 +20,11 @@ class PinPadViewModel @Inject internal constructor(
 
     private val useCase = paymentUseCase
 
-    private val _paymentState: MutableStateFlow<PurchaseState> = MutableStateFlow(PurchaseState.Loading())
-    val paymentState = _paymentState.asStateFlow()
+//    private val _paymentState: MutableStateFlow<PurchaseState> = MutableStateFlow(PurchaseState.None())
+//    val paymentState = _paymentState.asStateFlow()
+
+    private val _state: MutableStateFlow<PinPadState> = MutableStateFlow(PinPadState())
+    val state = _state.asStateFlow()
 
     fun performTransaction(enteredAmount: String): Job {
         return viewModelScope.launch {
@@ -29,7 +32,8 @@ class PinPadViewModel @Inject internal constructor(
                 .map {
                     it.toPurchaseState()
                 }.collect {
-                    _paymentState.value = it
+                    //_paymentState.value = it
+                    _state.value = _state.value.copy(purchaseState = it)
                 }
         }
     }
