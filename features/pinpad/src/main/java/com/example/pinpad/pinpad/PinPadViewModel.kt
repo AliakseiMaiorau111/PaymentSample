@@ -1,5 +1,6 @@
 package com.example.pinpad.pinpad
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinpad.toPurchaseState
@@ -26,6 +27,29 @@ class PinPadViewModel @Inject internal constructor(
     private val _state: MutableStateFlow<PinPadState> = MutableStateFlow(PinPadState())
     val state = _state.asStateFlow()
 
+    fun valueUpdated(newValue: String) {
+        Log.d("qaz", "VM, value updated: $newValue")
+        val valueToUpdate = if (canUpdate(newValue)) {
+            newValue
+        } else {
+            (MAX_AMOUNT * 100).toString()
+        }
+
+        _state.value = _state.value.copy(amountInput = valueToUpdate)
+    }
+
+    fun digitClick(digit: Int) {
+        if (digit < 0 || digit > 9) return
+
+        val newValue = _state.value.amountInput + digit.toString()
+        valueUpdated(newValue)
+    }
+
+    fun okClick() {
+        // Handle performTransaction
+        Log.i("qaz", "OkClick handled")
+    }
+
     fun performTransaction(enteredAmount: String): Job {
         return viewModelScope.launch {
             useCase.get().invoke()
@@ -37,4 +61,25 @@ class PinPadViewModel @Inject internal constructor(
                 }
         }
     }
+
+    private fun canUpdate(value: String): Boolean {
+        val cents = value.toCents()
+        val maxCents = MAX_AMOUNT * 100
+
+        return cents <= maxCents
+    }
+
+    companion object {
+        private const val MAX_AMOUNT = 100_000
+    }
+}
+
+private fun String.toCents(): Int {
+    val cents: Int = try {
+        toInt()
+    } catch (e: NumberFormatException) {
+        0
+    }
+
+    return cents
 }
