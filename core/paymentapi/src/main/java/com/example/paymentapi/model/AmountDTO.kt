@@ -11,6 +11,4 @@ data class AmountDTO(
     @SerialName("taxRate") val taxRate: String,
     @SerialName("tipAmount") val tipAmount: String,
     @SerialName("discountAmount") val discountAmount: String,
-
-
 )

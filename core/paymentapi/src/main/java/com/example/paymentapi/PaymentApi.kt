@@ -12,7 +12,7 @@ import retrofit2.http.GET
 
 interface PaymentApi {
 
-    @GET("")
+    @GET(" ")
     suspend fun getTransaction(): Result<TransactionDTO>
 }
 
