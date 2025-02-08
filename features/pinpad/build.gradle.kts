@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.androidx.storage)
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation(libs.gson)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)

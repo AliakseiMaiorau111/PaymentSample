@@ -12,15 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.paymentsample.ui.theme.PaymentSampleTheme
 import com.example.pinpad.pinpad.PinPadScreen
+import com.example.pinpad.receipt.ReceiptScreen
 import com.example.pinpad.ui.Destination
 import com.example.pinpad.ui.appDestination
-import com.example.pinpad.ui.aaa
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,7 +67,10 @@ private fun Screens(
         }
 
         appDestination(Destination.ReceiptScreen) { backStackEntry ->
-            // TODO: Implement ReceiptScreen
+            ReceiptScreen(
+                transactionInfo = Destination.ReceiptScreen.idForm(backStackEntry.arguments),
+                viewModel = hiltViewModel()
+            )
         }
     }
 }

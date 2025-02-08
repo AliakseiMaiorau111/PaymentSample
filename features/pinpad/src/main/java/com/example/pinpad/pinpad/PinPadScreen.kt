@@ -6,14 +6,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ban.currencyamountinput.CurrencyAmountInputVisualTransformation
 import com.example.pinpad.R
+import com.google.gson.Gson
 
 @Composable
 fun PinPadScreen(
@@ -49,6 +53,7 @@ fun PinPadScreen(
             InitialContent(
                 paddingValues = paddingValues,
                 inputValue = state.amountInput,
+                navigateToReceipt = navigateToReceipt,
                 okClicked = {
                     viewModel.okClick()
                 },
@@ -62,14 +67,21 @@ fun PinPadScreen(
         }
 
         is PurchaseState.Loading -> {
-
+            LoadingContent()
         }
 
         is PurchaseState.Error -> {
-
+            ErrorContent(state.purchaseState.error!!)
         }
 
         is PurchaseState.Success -> {
+            // no content
+            state.purchaseState.transaction?.let { data ->
+                val jsonTransaction = Gson().toJson(data)
+                navigateToReceipt(jsonTransaction)
+                // TODO: Think of improvement this
+                viewModel.resetState()
+            }
 
         }
     }
@@ -108,6 +120,7 @@ fun PinPadScreen(
 private fun InitialContent(
     paddingValues: PaddingValues,
     inputValue: String,
+    navigateToReceipt: (String) -> Unit,
     okClicked: () -> Unit,
     updateInput: (String) -> Unit,
     digitClicked: (Int) -> Unit,
@@ -196,9 +209,11 @@ private fun InitialContent(
                         .weight(1f)
                         .background(Color.Green)
                 ) {
-                    OtherButton(caption = "0",
+                    OtherButton(
+                        caption = "0",
                         digitClicked = digitClicked,
-                        okClicked = okClicked)
+                        okClicked = okClicked
+                    )
                 }
 
                 Column(
@@ -214,6 +229,32 @@ private fun InitialContent(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun LoadingContent() {
+    Box(modifier = Modifier
+        .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(64.dp),
+            color = Color.Green
+        )
+    }
+}
+
+@Composable
+private fun ErrorContent(error: Throwable) {
+    Column {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFFD8D8))
+            .padding(8.dp),
+            contentAlignment = Alignment.Center) {
+            Text("Error in loading data: ${error.localizedMessage}")
         }
     }
 }
@@ -318,14 +359,21 @@ fun OtherButton(
 
 @Preview(showBackground = true)
 @Composable
-fun PinPadScreenPreview() {
+fun InitialScreenPreview() {
     Scaffold { padding ->
         InitialContent(
             paddingValues = padding,
             inputValue = "0",
             {},
             {},
+            {},
             {}
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadingScreenPreview() {
+    LoadingContent()
 }

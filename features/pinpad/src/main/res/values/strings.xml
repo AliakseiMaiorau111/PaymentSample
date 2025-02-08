@@ -3,4 +3,11 @@
     <string name="pinpad_purchase">Purchase</string>
     <string name="pinpad_please_enter_amount">Please enter amount.</string>
     <string name="pinpad_ok">OK</string>
+
+
+    <string name="receipt_transaction_id">Transaction ID:</string>
+    <string name="receipt_transaction_status">Status:</string>
+    <string name="receipt_final_amount">Final Amount:</string>
+    <string name="receipt_tax">Tax:</string>
+    <string name="receipt_date">Date:</string>
 </resources>
