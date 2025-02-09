@@ -21,9 +21,6 @@ class PinPadViewModel @Inject internal constructor(
 
     private val useCase = paymentUseCase
 
-//    private val _paymentState: MutableStateFlow<PurchaseState> = MutableStateFlow(PurchaseState.None())
-//    val paymentState = _paymentState.asStateFlow()
-
     private val _state: MutableStateFlow<PinPadState> = MutableStateFlow(PinPadState())
     val state = _state.asStateFlow()
 
