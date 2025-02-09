@@ -60,7 +60,6 @@ class PinPadViewModel @Inject internal constructor(
                 .map {
                     it.toPurchaseState()
                 }.collect {
-                    //_paymentState.value = it
                     _state.value = _state.value.copy(purchaseState = it)
                 }
         }
