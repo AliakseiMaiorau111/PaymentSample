@@ -30,10 +30,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             PaymentSampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android 15",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
                     Screens(navController = rememberNavController(), innerPadding)
                 }
             }

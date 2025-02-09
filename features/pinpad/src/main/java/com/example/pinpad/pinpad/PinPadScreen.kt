@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -44,17 +45,15 @@ fun PinPadScreen(
     navigateToReceipt: (String) -> Unit,
     viewModel: PinPadViewModel
 ) {
-
-    //val state by viewModel.paymentState.collectAsState()
     val state by viewModel.state.collectAsState()
+    //val isAlreadyNavigatedToReceipt = rememberSaveable { mutableStateOf(false) }
 
     when (state.purchaseState) {
         is PurchaseState.None -> {
             InitialContent(
                 paddingValues = paddingValues,
                 inputValue = state.amountInput,
-                navigateToReceipt = navigateToReceipt,
-                okClicked = {
+                okClick = {
                     viewModel.okClick()
                 },
                 updateInput = { updatedValue ->
@@ -76,6 +75,7 @@ fun PinPadScreen(
 
         is PurchaseState.Success -> {
             // no content
+
             state.purchaseState.transaction?.let { data ->
                 val jsonTransaction = Gson().toJson(data)
                 navigateToReceipt(jsonTransaction)
@@ -85,45 +85,15 @@ fun PinPadScreen(
 
         }
     }
-//    Column {
-//        Button(modifier = Modifier.background(Color.LightGray),
-//            onClick = {
-//                //viewModel.performTransaction("")
-//            }) {
-//            when (state.purchaseState) {
-//                is PurchaseState.Loading -> {
-//                    Text("Loading")
-//                }
-//
-//                is PurchaseState.Error -> {
-//                    Text("Error")
-//                }
-//
-//                is PurchaseState.Success -> {
-//                    //Text("Success: ${state.transaction?.amount?.purchaseAmount}")
-//                    Text("Success: ${state.purchaseState.transaction?.amount?.purchaseAmount}")
-//                }
-//
-//                else -> {
-//                    // Text("None")
-//
-//                    //SampleUse()
-//                    //CurrencyAmountInput()
-//                }
-//            }
-//        }
-//    }
-
 }
 
 @Composable
 private fun InitialContent(
     paddingValues: PaddingValues,
     inputValue: String,
-    navigateToReceipt: (String) -> Unit,
-    okClicked: () -> Unit,
+    okClick: () -> Unit,
     updateInput: (String) -> Unit,
-    digitClicked: (Int) -> Unit,
+    digitClick: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -167,7 +137,8 @@ private fun InitialContent(
         ) {
             CurrencyAmountInput(
                 value = inputValue,
-                updateInput = updateInput
+                updateInput = updateInput,
+                okClick = okClick
             )
         }
 
@@ -184,19 +155,20 @@ private fun InitialContent(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .background(Color.Green)
+                                .background(Color(0xFFF6F6F6))
                         ) {
-                            DigitButton(digit, digitClicked)
+                            DigitButton(digit, digitClick)
                         }
                     }
                 }
             }
 
+            val hardButtonsBgColor = MaterialTheme.colors.background
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color.Green)
+                        .background(hardButtonsBgColor)
                 ) {
                     OtherButton(
                         caption = " ",
@@ -207,24 +179,24 @@ private fun InitialContent(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color.Green)
+                        .background(hardButtonsBgColor)
                 ) {
                     OtherButton(
                         caption = "0",
-                        digitClicked = digitClicked,
-                        okClicked = okClicked
+                        digitClicked = digitClick,
+                        okClicked = okClick
                     )
                 }
 
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color.Green)
+                        .background(hardButtonsBgColor)
                 ) {
                     OtherButton(
                         caption = stringResource(R.string.pinpad_ok),
-                        digitClicked = digitClicked,
-                        okClicked = okClicked,
+                        digitClicked = digitClick,
+                        okClicked = okClick,
                         isHighlighted = true
                     )
                 }
@@ -251,7 +223,7 @@ private fun ErrorContent(error: Throwable) {
     Column {
         Box(modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFD8D8))
+            .background(MaterialTheme.colors.onError)
             .padding(8.dp),
             contentAlignment = Alignment.Center) {
             Text("Error in loading data: ${error.localizedMessage}")
@@ -262,9 +234,9 @@ private fun ErrorContent(error: Throwable) {
 @Composable
 private fun CurrencyAmountInput(
     value: String,
-    updateInput: (String) -> Unit
+    updateInput: (String) -> Unit,
+    okClick: () -> Unit
 ) {
-    //var value by remember { mutableStateOf("") }
     OutlinedTextField(
         modifier = Modifier
             .padding(bottom = 24.dp)
@@ -292,7 +264,7 @@ private fun CurrencyAmountInput(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
         keyboardActions = KeyboardActions(
             onDone = {
-                Log.d("qaz", "On Done")
+                okClick()
             },
             onNext = {
                 Log.d("qaz", "On Next")
@@ -363,8 +335,7 @@ fun InitialScreenPreview() {
     Scaffold { padding ->
         InitialContent(
             paddingValues = padding,
-            inputValue = "0",
-            {},
+            inputValue = "123",
             {},
             {},
             {}
@@ -376,4 +347,10 @@ fun InitialScreenPreview() {
 @Composable
 fun LoadingScreenPreview() {
     LoadingContent()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorContentPreview() {
+    ErrorContent(IllegalArgumentException("Something is wrong"))
 }

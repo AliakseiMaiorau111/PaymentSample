@@ -26,6 +26,11 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
 
+private val formatter: NumberFormat = NumberFormat.getNumberInstance(Locale.GERMANY).also {
+    it.minimumFractionDigits = 2
+    it.maximumFractionDigits = 2
+}
+
 @Composable
 fun ReceiptScreen(
     transactionInfo: String,
@@ -43,14 +48,6 @@ fun ReceiptScreen(
     } else {
         ErrorContent()
     }
-
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//    ) {
-//        Spacer(modifier = Modifier.height(10.dp))
-//        Text("Screen 2: $transactionInfo")
-//    }
 }
 
 @Composable
@@ -84,17 +81,13 @@ fun ReceiptContent(transactionUI: TransactionUI) {
         val finalAmount = taxableAmount - discount + tips
 
         val tax = finalAmount * BigDecimal(transactionUI.amount.taxRate)
-        val formatter: NumberFormat = NumberFormat.getNumberInstance(Locale.GERMANY)
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(2f)) {
                 Text(stringResource(R.string.receipt_final_amount), fontSize = 14.sp)
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text("$finalAmount", fontSize = 14.sp, color = Color.Red)
+                Text(formatter.format(finalAmount), fontSize = 14.sp, color = Color.Red)
             }
             Column(modifier = Modifier.weight(2f)) {
                 Text(stringResource(R.string.receipt_tax), fontSize = 14.sp)
