@@ -24,12 +24,15 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.math.BigDecimal
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 private val formatter: NumberFormat = NumberFormat.getNumberInstance(Locale.GERMANY).also {
     it.minimumFractionDigits = 2
     it.maximumFractionDigits = 2
 }
+
+private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMANY)
 
 @Composable
 fun ReceiptScreen(
@@ -75,12 +78,12 @@ fun ReceiptContent(transactionUI: TransactionUI) {
         Spacer(modifier = Modifier.height(8.dp))
 
         // TODO: Improve logic here
-        val taxableAmount = BigDecimal(transactionUI.amount.taxableAmount)
-        val discount = BigDecimal(transactionUI.amount.discountAmount)
-        val tips = BigDecimal(transactionUI.amount.tipAmount)
+        val taxableAmount = transactionUI.amount.taxableAmount
+        val discount = transactionUI.amount.discountAmount
+        val tips = transactionUI.amount.tipAmount
         val finalAmount = taxableAmount - discount + tips
 
-        val tax = finalAmount * BigDecimal(transactionUI.amount.taxRate)
+        val tax = finalAmount * transactionUI.amount.taxRate
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(2f)) {
@@ -99,11 +102,13 @@ fun ReceiptContent(transactionUI: TransactionUI) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        val date = dateFormat.parse(transactionUI.transactionDetails.timestamp)
+
         Row(modifier = Modifier.fillMaxWidth()) {
             MultiColorText(
                 text1 = stringResource(R.string.receipt_date),
-                text2 = "  ${transactionUI.transactionDetails.timestamp}",
-                color2 = Color.LightGray
+                text2 = "  $date",
+                color2 = Color.Blue
             )
         }
     }

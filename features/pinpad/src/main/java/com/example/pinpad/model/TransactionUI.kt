@@ -1,6 +1,5 @@
 package com.example.pinpad.model
 
-import model.AmountUI
 import model.TransactionDetailsUI
 
 data class TransactionUI(

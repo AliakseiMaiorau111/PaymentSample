@@ -4,10 +4,11 @@ import com.example.data.RequestResult
 import com.example.paymentapi.model.AmountDTO
 import com.example.paymentapi.model.TransactionDTO
 import com.example.paymentapi.model.TransactionDetailsDTO
+import com.example.pinpad.model.AmountUI
 import com.example.pinpad.model.TransactionUI
 import com.example.pinpad.pinpad.PurchaseState
-import model.AmountUI
 import model.TransactionDetailsUI
+import java.math.BigDecimal
 
 internal fun RequestResult.toPurchaseState(): PurchaseState {
     return when(this) {
@@ -25,14 +26,15 @@ internal fun RequestResult.toPurchaseState(): PurchaseState {
     }
 }
 
+// TODO: NumberFormatException can be handled later if we don't trust server
 internal fun AmountDTO.toUi(): AmountUI =
     AmountUI(
-        purchaseAmount = purchaseAmount,
+        purchaseAmount = BigDecimal(purchaseAmount),
         currency = currency,
-        taxableAmount = taxableAmount,
-        taxRate = taxRate,
-        tipAmount = tipAmount,
-        discountAmount = discountAmount
+        taxableAmount = BigDecimal(taxableAmount),
+        taxRate = BigDecimal(taxRate),
+        tipAmount = BigDecimal(tipAmount),
+        discountAmount = BigDecimal(discountAmount)
     )
 
 internal fun TransactionDetailsDTO.toUi(): TransactionDetailsUI =

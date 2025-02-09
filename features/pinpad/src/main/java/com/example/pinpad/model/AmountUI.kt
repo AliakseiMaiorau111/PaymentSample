@@ -1,10 +1,12 @@
-package model
+package com.example.pinpad.model
+
+import java.math.BigDecimal
 
 data class AmountUI(
-    val purchaseAmount: String,
+    val purchaseAmount: BigDecimal,
     val currency: String,
-    val taxableAmount: String, // TODO: ? BigDecimal
-    val taxRate: String,
-    val tipAmount: String,
-    val discountAmount: String,
+    val taxableAmount: BigDecimal,
+    val taxRate: BigDecimal,
+    val tipAmount: BigDecimal,
+    val discountAmount: BigDecimal,
 )
