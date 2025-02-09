@@ -134,5 +134,5 @@ private fun MultiColorText(
 
 @Composable
 fun ErrorContent() {
-
+ // no error content here
 }

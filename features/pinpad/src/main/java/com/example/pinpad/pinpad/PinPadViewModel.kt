@@ -46,8 +46,6 @@ class PinPadViewModel @Inject internal constructor(
     }
 
     fun okClick() {
-        // Handle performTransaction
-        Log.i("qaz", "OkClick handled")
         performTransaction(_state.value.amountInput)
     }
 
@@ -56,6 +54,7 @@ class PinPadViewModel @Inject internal constructor(
     }
 
     private fun performTransaction(enteredAmount: String): Job {
+        _state.value = _state.value.copy(purchaseState = PurchaseState.Loading())
         return viewModelScope.launch {
             useCase.get().invoke()
                 .map {
