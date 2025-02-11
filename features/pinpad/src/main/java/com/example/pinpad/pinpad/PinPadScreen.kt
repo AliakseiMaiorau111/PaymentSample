@@ -1,6 +1,5 @@
 package com.example.pinpad.pinpad
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,6 @@ fun PinPadScreen(
     viewModel: PinPadViewModel
 ) {
     val state by viewModel.state.collectAsState()
-    //val isAlreadyNavigatedToReceipt = rememberSaveable { mutableStateOf(false) }
 
     when (state.purchaseState) {
         is PurchaseState.None -> {
@@ -267,13 +265,13 @@ private fun CurrencyAmountInput(
                 okClick()
             },
             onNext = {
-                Log.d("qaz", "On Next")
+
             },
             onSend = {
-                Log.d("qaz", "On Send")
+
             },
             onGo = {
-                Log.d("qaz", "On Go")
+
             }
         )
     )

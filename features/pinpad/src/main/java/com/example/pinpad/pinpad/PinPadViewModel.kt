@@ -1,6 +1,5 @@
 package com.example.pinpad.pinpad
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinpad.toPurchaseState
@@ -25,7 +24,7 @@ class PinPadViewModel @Inject internal constructor(
     val state = _state.asStateFlow()
 
     fun valueUpdated(newValue: String) {
-        Log.d("qaz", "VM, value updated: $newValue")
+
         val valueToUpdate = if (canUpdate(newValue)) {
             newValue
         } else {
